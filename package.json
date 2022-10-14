@@ -8,9 +8,21 @@
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json"
 	},
-	"keywords": [],
-	"author": "",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/NovaGaia/obsidian-checkbox3states-plugin.git"
+	},
+	"keywords": [
+		"obsidian",
+		"obsidian-plugin",
+		"checkbox"
+	],
+	"author": "Renaud Héluin / NovaGaïa <renaud.heluin@novagaia.fr>",
 	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/NovaGaia/obsidian-checkbox3states-plugin/issues"
+	},
+	"homepage": "https://github.com/NovaGaia/obsidian-checkbox3states-plugin#readme",
 	"devDependencies": {
 		"@types/node": "^16.11.6",
 		"@typescript-eslint/eslint-plugin": "5.29.0",
