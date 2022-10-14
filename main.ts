@@ -19,6 +19,11 @@ const DEFAULT_SETTINGS: ThirdStateSettings = {
 	hoverColor: "#c77a0f",
 };
 
+// touch duration before third check/uncheck
+const touchduration = 500;
+
+let timer: ReturnType<typeof setTimeout>;
+
 export default class ThirdState extends Plugin {
 	settings: ThirdStateSettings;
 
@@ -32,21 +37,60 @@ export default class ThirdState extends Plugin {
 
 		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
 		// Using this function will automatically remove the event listener when this plugin is disabled.
-		this.registerDomEvent(document, "click", (evt: PointerEvent) => {
+		this.registerDomEvent(document, "click", (evt: MouseEvent) => {
+			// console.log(evt);
+
 			const checkbox = Object(evt.target);
 			if (
+				evt.pointerType === "mouse" &&
 				evt.shiftKey &&
 				checkbox.className === "task-list-item-checkbox"
 			) {
 				evt.preventDefault();
+				console.log("mouse");
 				if (checkbox.dataset.task !== "/") {
 					checkbox.dataset.task = "/";
 				} else {
 					checkbox.dataset.task = "x";
 				}
 			}
+			// else if (
+			// 	evt.pointerType === "touch" &&
+			// 	checkbox.className === "task-list-item-checkbox"
+			// ) {
+			// 	evt.preventDefault();
+			// 	console.log("touch");
+			// 	timer = setTimeout(this.onlongtouch, touchduration);
+			// }
+		});
+
+		this.registerDomEvent(document, "touchstart", (evt: TouchEvent) => {
+			const checkbox = Object(evt.target);
+			if (checkbox.className === "task-list-item-checkbox") {
+				// evt.preventDefault();
+				console.log("touch start");
+				timer = setTimeout(this.onlongtouch, touchduration, checkbox);
+			}
+		});
+
+		this.registerDomEvent(document, "touchend", (evt: TouchEvent) => {
+			const checkbox = Object(evt.target);
+			if (checkbox.className === "task-list-item-checkbox") {
+				evt.preventDefault();
+				console.log("touch end");
+				if (timer) clearTimeout(timer); // clearTimeout, not cleartimeout..
+			}
 		});
 	}
+
+	onlongtouch = function (checkbox) {
+		console.log("long touch");
+		if (checkbox.dataset.task !== "/") {
+			checkbox.dataset.task = "/";
+		} else {
+			checkbox.dataset.task = " ";
+		}
+	};
 
 	onunload() {
 		this.removeStyle();
