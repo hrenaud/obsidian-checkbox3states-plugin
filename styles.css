@@ -1,6 +1,4 @@
 :root {
-	--checkbox-3-state: #ff930a;
-	--checkbox-3-state-accent: #ff8800;
 	--checkbox-marker-mid-color: var(--checkbox-3-state);
 	--checkbox-marker-mid-color-hover: var(--checkbox-3-state-accent);
 }
