@@ -9,18 +9,18 @@ import {
 
 // Remember to rename these classes and interfaces!
 
-interface MyPluginSettings {
+interface ThirdStateSettings {
 	baseColor: string;
 	hoverColor: string;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: ThirdStateSettings = {
 	baseColor: "#ff930a",
 	hoverColor: "#c77a0f",
 };
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class ThirdState extends Plugin {
+	settings: ThirdStateSettings;
 
 	async onload() {
 		await this.loadSettings();
@@ -105,9 +105,9 @@ export default class MyPlugin extends Plugin {
 }
 
 class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+	plugin: ThirdState;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: ThirdState) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
