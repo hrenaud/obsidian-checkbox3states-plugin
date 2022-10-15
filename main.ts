@@ -60,7 +60,6 @@ export default class ThirdState extends Plugin {
 			const checkbox = Object(evt.target);
 			if (checkbox.className === "task-list-item-checkbox") {
 				evt.preventDefault();
-				evt.stopPropagation();
 				timer = setTimeout(
 					this.onlongtouch,
 					this.settings.touchduration,
@@ -74,7 +73,6 @@ export default class ThirdState extends Plugin {
 			const checkbox = Object(evt.target);
 			if (checkbox.className === "task-list-item-checkbox") {
 				evt.preventDefault();
-				evt.stopPropagation();
 				if (timer) clearTimeout(timer); // clearTimeout, not cleartimeout..
 			}
 		});
