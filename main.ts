@@ -1,6 +1,7 @@
 import {
 	App,
 	ColorComponent,
+	Notice,
 	Plugin,
 	PluginSettingTab,
 	Setting,
@@ -86,11 +87,10 @@ export default class ThirdState extends Plugin {
 	onlongtouch = function (checkbox: HTMLElement) {
 		if (checkbox.dataset.task !== "/") {
 			checkbox.dataset.task = "/";
-			alert("Third state checkbox add!");
 		} else {
 			checkbox.dataset.task = " ";
-			alert("Third state checkbox remove!");
 		}
+		new Notice("Third state checkbox toggle!");
 	};
 
 	/**
