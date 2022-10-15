@@ -25,6 +25,7 @@ const DEFAULT_SETTINGS: ThirdStateSettings = {
 
 // timer var
 let timer: ReturnType<typeof setTimeout>;
+let longTouchDone = false;
 
 export default class ThirdState extends Plugin {
 	settings: ThirdStateSettings;
@@ -56,24 +57,32 @@ export default class ThirdState extends Plugin {
 		});
 
 		// Touch Start Event
-		this.registerDomEvent(document, "touchstart", (evt: TouchEvent) => {
-			const checkbox = Object(evt.target);
-			if (checkbox.className === "task-list-item-checkbox") {
-				evt.preventDefault();
-				timer = setTimeout(
-					this.onlongtouch,
-					this.settings.touchduration,
-					checkbox
-				);
-			}
-		});
+		this.registerDomEvent(
+			document,
+			"touchstart",
+			(evt: TouchEvent) => {
+				const checkbox = Object(evt.target);
+				if (checkbox.className === "task-list-item-checkbox") {
+					timer = setTimeout(
+						this.onlongtouch,
+						this.settings.touchduration,
+						checkbox
+					);
+				}
+			},
+			{ passive: false }
+		);
 
 		// Touch End Event
 		this.registerDomEvent(document, "touchend", (evt: TouchEvent) => {
 			const checkbox = Object(evt.target);
 			if (checkbox.className === "task-list-item-checkbox") {
-				evt.preventDefault();
 				if (timer) clearTimeout(timer); // clearTimeout, not cleartimeout..
+				if (longTouchDone) {
+					evt.preventDefault();
+					longTouchDone = false;
+					return;
+				}
 			}
 		});
 	}
@@ -83,12 +92,13 @@ export default class ThirdState extends Plugin {
 	 * @param checkbox
 	 */
 	onlongtouch = function (checkbox: HTMLElement) {
+		longTouchDone = true;
 		if (checkbox.dataset.task !== "/") {
 			checkbox.dataset.task = "/";
 		} else {
 			checkbox.dataset.task = " ";
 		}
-		new Notice("Third state checkbox toggle!");
+		new Notice("Third state checkbox toggled!");
 	};
 
 	/**
