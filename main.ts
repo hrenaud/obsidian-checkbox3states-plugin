@@ -10,26 +10,29 @@ import {
 // Remember to rename these classes and interfaces!
 
 interface ThirdStateSettings {
+	touchduration: number;
 	baseColor: string;
 	hoverColor: string;
 }
 
 const DEFAULT_SETTINGS: ThirdStateSettings = {
+	// touch duration before third check/uncheck
+	touchduration: 300,
 	baseColor: "#ff930a",
 	hoverColor: "#c77a0f",
 };
 
-// touch duration before third check/uncheck
-const touchduration = 500;
-
+// timer var
 let timer: ReturnType<typeof setTimeout>;
 
 export default class ThirdState extends Plugin {
 	settings: ThirdStateSettings;
 
+	// What to do onLoad Plugin
 	async onload() {
 		await this.loadSettings();
 
+		// this add style html element to handle styles vars
 		this.addStyle();
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
@@ -37,54 +40,64 @@ export default class ThirdState extends Plugin {
 
 		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
 		// Using this function will automatically remove the event listener when this plugin is disabled.
+		// Mouse event
 		this.registerDomEvent(document, "click", (evt: MouseEvent) => {
 			// console.log(evt);
 
 			const checkbox = Object(evt.target);
 			if (
-				evt.pointerType === "mouse" &&
 				evt.shiftKey &&
 				checkbox.className === "task-list-item-checkbox"
 			) {
 				evt.preventDefault();
-				console.log("mouse");
-				if (checkbox.dataset.task !== "/") {
-					checkbox.dataset.task = "/";
-				} else {
-					checkbox.dataset.task = "x";
-				}
+				this.onCheckBoxChange(checkbox);
 			}
-			// else if (
-			// 	evt.pointerType === "touch" &&
-			// 	checkbox.className === "task-list-item-checkbox"
-			// ) {
-			// 	evt.preventDefault();
-			// 	console.log("touch");
-			// 	timer = setTimeout(this.onlongtouch, touchduration);
-			// }
 		});
 
+		// Touch Start Event
 		this.registerDomEvent(document, "touchstart", (evt: TouchEvent) => {
 			const checkbox = Object(evt.target);
 			if (checkbox.className === "task-list-item-checkbox") {
-				// evt.preventDefault();
-				console.log("touch start");
-				timer = setTimeout(this.onlongtouch, touchduration, checkbox);
+				evt.preventDefault();
+				evt.stopPropagation();
+				timer = setTimeout(
+					this.onlongtouch,
+					this.settings.touchduration,
+					checkbox
+				);
 			}
 		});
 
+		// Touch End Event
 		this.registerDomEvent(document, "touchend", (evt: TouchEvent) => {
 			const checkbox = Object(evt.target);
 			if (checkbox.className === "task-list-item-checkbox") {
 				evt.preventDefault();
-				console.log("touch end");
+				evt.stopPropagation();
 				if (timer) clearTimeout(timer); // clearTimeout, not cleartimeout..
 			}
 		});
 	}
 
-	onlongtouch = function (checkbox) {
-		console.log("long touch");
+	/**
+	 * Dispatched function with timer onLongTouch. Duration see `touchduration`
+	 * @param checkbox
+	 */
+	onlongtouch = function (checkbox: HTMLElement) {
+		if (checkbox.dataset.task !== "/") {
+			checkbox.dataset.task = "/";
+			alert("Third state checkbox add!");
+		} else {
+			checkbox.dataset.task = " ";
+			alert("Third state checkbox remove!");
+		}
+	};
+
+	/**
+	 * Handle checkbox interaction
+	 * @param checkbox
+	 */
+	onCheckBoxChange = function (checkbox: HTMLElement) {
 		if (checkbox.dataset.task !== "/") {
 			checkbox.dataset.task = "/";
 		} else {
@@ -92,6 +105,7 @@ export default class ThirdState extends Plugin {
 		}
 	};
 
+	// What to do onUnLoad Plugin
 	onunload() {
 		this.removeStyle();
 	}
@@ -109,6 +123,9 @@ export default class ThirdState extends Plugin {
 		this.updateStyle();
 	}
 
+	/**
+	 * Add style html element to handle styles vars
+	 */
 	addStyle() {
 		// add a css block for our settings-dependent styles
 		const css = document.createElement("style");
@@ -119,7 +136,11 @@ export default class ThirdState extends Plugin {
 		this.updateStyle();
 	}
 
-	// https://github.com/kepano/obsidian-minimal-settings/blob/77392d8f8443be637d5198fe311ccbfef2ee0957/main.ts#L729
+	/**
+	 * Updatde style to be store in header.
+	 * Trigger by `addStyle` when plugin loading
+	 * Trigger by the changing of configuration
+	 */
 	updateStyle() {
 		// get the custom css element
 		const el = document.getElementById("checkbox-3-state");
@@ -140,6 +161,7 @@ export default class ThirdState extends Plugin {
 		}
 	}
 
+	// Clean html head on unload of plugin
 	removeStyle() {
 		const element = document.getElementById("checkbox-3-state");
 		if (element) {
@@ -148,6 +170,9 @@ export default class ThirdState extends Plugin {
 	}
 }
 
+/**
+ * Configuration of settings pan
+ */
 class SampleSettingTab extends PluginSettingTab {
 	plugin: ThirdState;
 
