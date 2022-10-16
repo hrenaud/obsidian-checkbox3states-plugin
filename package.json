@@ -7,7 +7,7 @@
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json",
-		"copybeta": "env-cmd --use-shell \"npm run copy:icloud\"",
+		"copybeta": "env-cmd --use-shell \"npm run copybeta:icloud\"",
 		"copybeta:icloud": "copyfiles manifest.json styles.css main.js \"$VAULT_FOLDER\"",
 		"rmbeta": "env-cmd --use-shell \"npm run rmbeta:icloud\"",
 		"rmbeta:icloud": "rm -rf \"$VAULT_FOLDER\""
