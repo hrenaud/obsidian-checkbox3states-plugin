@@ -1,5 +1,7 @@
 # Checkbox 3 states plugin
 
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/hrenaud/obsidian-checkbox3states-plugin?style=for-the-badge&sort=semver)
+
 This plugin allows you to have a third state on the checkboxes of the task list.
 Works on mobile, try a long press.
 
