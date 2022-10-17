@@ -95,8 +95,11 @@ export default class ThirdState extends Plugin {
 		longTouchDone = true;
 		if (checkbox.dataset.task !== "/") {
 			checkbox.dataset.task = "/";
+			Object(checkbox.closest(".HyperMD-list-line")).dataset.task = "/";
+			("/");
 		} else {
 			checkbox.dataset.task = " ";
+			Object(checkbox.closest(".HyperMD-list-line")).dataset.task = " ";
 		}
 		new Notice("Third state checkbox toggled!");
 	};
@@ -108,8 +111,10 @@ export default class ThirdState extends Plugin {
 	onCheckBoxChange = function (checkbox: HTMLElement) {
 		if (checkbox.dataset.task !== "/") {
 			checkbox.dataset.task = "/";
+			Object(checkbox.closest(".HyperMD-list-line")).dataset.task = "/";
 		} else {
 			checkbox.dataset.task = " ";
+			Object(checkbox.closest(".HyperMD-list-line")).dataset.task = " ";
 		}
 	};
 
