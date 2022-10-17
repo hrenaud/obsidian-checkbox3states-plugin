@@ -1,0 +1,12 @@
+{
+	"github": {
+		"release": true,
+		"assets": ["main.js", "manifest.json", "styles.css"]
+	},
+	"npm": {
+		"publish": false
+	},
+	"hook": {
+		"after": "npm run version"
+	}
+}
